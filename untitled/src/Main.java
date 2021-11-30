@@ -35,6 +35,11 @@ public class Main {
 
     public static void sendString(SerialPort p, String text){
         p.writeBytes(text.getBytes(StandardCharsets.UTF_8), text.length());
+        try {
+            p.getOutputStream().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void sendByte(SerialPort p, byte b){

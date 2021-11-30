@@ -25,12 +25,21 @@ public class Win extends JFrame implements ActionListener{
 
     private SerialPort[] ports;
     private byte[] r = new byte[5];
+    private boolean execute = true;
+
     private Thread th = new Thread(() -> {
-        while(true) {
-            System.out.println("thread running!"+i);
-            ports[0].readBytes(r,5);
-            System.out.println(Main.convertBytesToString(r,5));
-            label_deg_val.setText(Main.convertBytesToString(r,5));
+        System.out.println("thread opened");
+        while(execute) {
+            System.out.println("thread running!");
+
+            try{
+                ports[0].readBytes(r,5);
+                System.out.println(Main.convertBytesToString(r,5));
+                label_deg_val.setText(Main.convertBytesToString(r,5));
+            }catch (Exception er){
+                System.out.println("cant read data.");
+            }
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException er) {
@@ -38,6 +47,7 @@ public class Win extends JFrame implements ActionListener{
             }
         }
     });
+
 
     public Win(){
         setLayout(new FlowLayout());
@@ -92,26 +102,25 @@ public class Win extends JFrame implements ActionListener{
                 connectButton.setText("Connect");
                 label_status.setText("Disconnected!");
             }
-
         }else if(e.getSource() == button_deg){
-            if(button_deg.getText().equals("get Degree")){
-                this.th.start();
-                button_deg.setText("Stop");
-                button_deg.setBackground(Color.CYAN);
-                System.out.println("reading sensor values.");
-            }else{
-                this.th.interrupt();
-                System.out.println("stoped recieving data.");
-            }
-
-
-
+                if(button_deg.getText().equals("getDegree")){
+                    this.execute = true;
+                    try{
+                        this.th.start();
+                    }catch(Exception er){
+                        System.out.println("error: "+er);
+                    }
+                    button_deg.setText("Stop");
+                }else{
+                    this.execute = false;
+                    button_deg.setText("getDegree");
+                }
         }
+
     }
 
     public static void togglebutton(JButton b, SerialPort p, String toggle1_message, String toggle2_message, Color toggle1_color,Color toggle2_color){
         if(b.getText().equals("ON")){
-            //sen data
             Main.sendString(p,toggle2_message);
             b.setText("OFF");
             b.setBackground(toggle1_color);
@@ -129,4 +138,6 @@ public class Win extends JFrame implements ActionListener{
     public void setLabel_deg_val(JLabel label_deg_val) {
         this.label_deg_val = label_deg_val;
     }
+
+
 }
