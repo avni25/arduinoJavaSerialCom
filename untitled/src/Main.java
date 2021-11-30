@@ -17,7 +17,7 @@ public class Main {
 //        Thread th = new Thread(() -> {
 //            for (int i = 0; i < 100; i++) {
 //                System.out.println("thread running!"+i);
-//                ports[0].readBytes(r,5);
+//                SerialPort.getCommPort("COM7").readBytes(r,5);
 //                System.out.println(convertBytesToString(r,5));
 //                try {
 //                    Thread.sleep(1000);

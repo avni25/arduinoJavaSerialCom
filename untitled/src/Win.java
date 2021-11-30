@@ -21,10 +21,23 @@ public class Win extends JFrame implements ActionListener{
     private JLabel label_led5;
     private JPanel mypanel;
     private JLabel label_deg_val;
+    private JButton button_deg;
 
     private SerialPort[] ports;
-
-
+    private byte[] r = new byte[5];
+    private Thread th = new Thread(() -> {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("thread running!"+i);
+            ports[0].readBytes(r,5);
+            System.out.println(Main.convertBytesToString(r,5));
+            label_deg_val.setText(Main.convertBytesToString(r,5));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException er) {
+                er.printStackTrace();
+            }
+        }
+    });
 
     public Win(){
         setLayout(new FlowLayout());
@@ -39,6 +52,7 @@ public class Win extends JFrame implements ActionListener{
         button4.addActionListener(this);
         button5.addActionListener(this);
         connectButton.addActionListener(this);
+        button_deg.addActionListener(this);
         setVisible(true);
 
         System.out.println("\nUsing Library Version v" + SerialPort.getVersion());
@@ -48,6 +62,9 @@ public class Win extends JFrame implements ActionListener{
             System.out.println("   [" + i + "] " + ports[i].getSystemPortName() + ": " + ports[i].getDescriptivePortName() + " - " + ports[i].getPortDescription());
 
         }
+
+
+
     }
 
 
@@ -76,7 +93,10 @@ public class Win extends JFrame implements ActionListener{
                 label_status.setText("Disconnected!");
             }
 
-
+        }else if(e.getSource() == button_deg){
+            System.out.println("read button");
+            this.th.start();
+            System.out.println("read 2");
         }
     }
 
@@ -93,6 +113,11 @@ public class Win extends JFrame implements ActionListener{
         }
     }
 
+    public JLabel getLabel_deg_val() {
+        return label_deg_val;
+    }
 
-
+    public void setLabel_deg_val(JLabel label_deg_val) {
+        this.label_deg_val = label_deg_val;
+    }
 }
