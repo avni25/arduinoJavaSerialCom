@@ -12,16 +12,21 @@ public class Main {
         Win win = new Win();
 
 
-    }
 
+
+    }
+    /**
+     * portun baslatma islemleri icin kullanlıan method
+     *
+     * */
     public static int openPort(SerialPort p, int newBaudRate, int newDataBits, int newStopBits, int newParity){
         try{
-            p.openPort();
-            p.setComPortParameters(newBaudRate, newDataBits, newStopBits, newParity);
+            p.openPort();       // portu acar
+            p.setComPortParameters(newBaudRate, newDataBits, newStopBits, newParity); // port ayarlarini yaapr
             p.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
-            if(p.openPort()){
+            if(p.openPort()){   //port aciksa ekrana bilgi yazar
                 System.out.println("port connected");
-                return 1;
+                return 1;       // ve bir degerini donduurur
             }else{
                 System.out.println("failed to open port");
                 return -1;
@@ -32,7 +37,10 @@ public class Main {
         }
 
     }
-
+    /**
+     * porta string deger gonderir.
+     * method aldigi string degeri byte seklinde porta gonderir
+     * */
     public static void sendString(SerialPort p, String text){
         p.writeBytes(text.getBytes(StandardCharsets.UTF_8), text.length());
         try {
@@ -41,11 +49,16 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+    /**
+     * sadece bir byte porta gonderir
+     * */
     public static void sendByte(SerialPort p, byte b){
         p.writeBytes(new byte[]{b}, 1);
     }
 
+    /**
+     * portu kapatır
+     * */
     public static void closePort(SerialPort p){
         p.closePort();
 
@@ -56,7 +69,11 @@ public class Main {
             return;
         }
     }
-
+    /**
+     * porta gelen veriler byte olarak geldigi icin daha okunur olmasi icin ve
+     * string ifade de gonderebilmek icin olusturuklmustur
+     * byte array i stringe cevirir
+     * */
     public static String convertBytesToString(byte[] b, int bytesToConvert){
 
         char[] ch = new char[bytesToConvert];

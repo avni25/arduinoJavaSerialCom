@@ -24,9 +24,14 @@ public class Win extends JFrame implements ActionListener{
     private JButton button_deg;
 
     private SerialPort[] ports;
-    private byte[] r = new byte[5];
-    private boolean execute = true;
-
+    private byte[] r = new byte[5];  // porttan gelen/giden byte degerlerini tutmak icin olusuturlmustur
+    private boolean execute = true;  // thread i baslatmak ve sonlandirmak icin olusturulmustur
+    /**
+     * arduinodan gelen sicaklik bilgisi icin olusturukmustur.
+     * buton ile thread baslar
+     * yine buton ile sonlanir.
+     * her 1 saniyede arduinodan gelen veri label a yazdirilir
+     * */
     private Thread th = new Thread(() -> {
         System.out.println("thread opened");
         while(execute) {
@@ -48,7 +53,12 @@ public class Win extends JFrame implements ActionListener{
         }
     });
 
-
+    /**
+     * constructor
+     * pencereyi hazırlar
+     * actionlistenerlar barindirir
+     * ve aktif portlari alir ve console da yazdidirir
+     * */
     public Win(){
         setLayout(new FlowLayout());
         setTitle("my Window");
@@ -77,7 +87,14 @@ public class Win extends JFrame implements ActionListener{
 
     }
 
-
+    /**
+     * tuslarin komutlarini icerir
+     * led tuslarina basildiginda togglebutton methodu ile arduinoya ilgili
+     * string degerlerini gonderir. bu degerlere gore arduino da ledleri yakar veya sondurur
+     * connec butonu ile port acilir ve porta baglanir.
+     * Butonların hepsi toggle buton seklindedir
+     *
+     * */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==button1){
@@ -119,6 +136,13 @@ public class Win extends JFrame implements ActionListener{
 
     }
 
+    /**
+     * 5 led butonu aynni isiyaptıgindan hepsi icin ayni kodlari yazmak yterine
+     * ortak bir method olusturularak kod sadelestirmek icin olusturulmustur.
+     * buton text on ise ilgili string degerini gonderir ve text i off yapar.
+     * buton string off ise ilgili degiskeni gonderir ve text i on yapar.
+     * bu sekilde bir tus iki amacli kullanilabilir
+     * */
     public static void togglebutton(JButton b, SerialPort p, String toggle1_message, String toggle2_message, Color toggle1_color,Color toggle2_color){
         if(b.getText().equals("ON")){
             Main.sendString(p,toggle2_message);
@@ -131,13 +155,7 @@ public class Win extends JFrame implements ActionListener{
         }
     }
 
-    public JLabel getLabel_deg_val() {
-        return label_deg_val;
-    }
 
-    public void setLabel_deg_val(JLabel label_deg_val) {
-        this.label_deg_val = label_deg_val;
-    }
 
 
 }
