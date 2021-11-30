@@ -26,7 +26,7 @@ public class Win extends JFrame implements ActionListener{
     private SerialPort[] ports;
     private byte[] r = new byte[5];
     private Thread th = new Thread(() -> {
-        for (int i = 0; i < 100; i++) {
+        while(true) {
             System.out.println("thread running!"+i);
             ports[0].readBytes(r,5);
             System.out.println(Main.convertBytesToString(r,5));
@@ -94,9 +94,18 @@ public class Win extends JFrame implements ActionListener{
             }
 
         }else if(e.getSource() == button_deg){
-            System.out.println("read button");
-            this.th.start();
-            System.out.println("read 2");
+            if(button_deg.getText().equals("get Degree")){
+                this.th.start();
+                button_deg.setText("Stop");
+                button_deg.setBackground(Color.CYAN);
+                System.out.println("reading sensor values.");
+            }else{
+                this.th.interrupt();
+                System.out.println("stoped recieving data.");
+            }
+
+
+
         }
     }
 
