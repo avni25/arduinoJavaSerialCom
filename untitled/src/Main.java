@@ -1,16 +1,54 @@
 import java.io.IOException;
 import com.fazecast.jSerialComm.*;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.ChartFactory;
+import org.jfree.data.general.DefaultKeyedValues2DDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 import java.io.Serial;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+//-----------------------------------------------
+import java.awt.Color;
+import java.awt.BasicStroke;
+import java.util.Arrays;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+
 
 public class Main {
+
+    public static ArrayList<Double> Y = new ArrayList<>(Arrays.asList(1.1,20.2,null,8.0,15.4));
+
     public static void main(String[] args) throws IOException, InterruptedException{
 
         Win win = new Win();
-
+//        Thread t1 = new Thread(()->{
+//            for (int i = 0; i < 5; i++) {
+//                System.out.println("t1: "+i);
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        t1.start();
+//        t1.join();
+//        System.out.println("end");
 
 
 

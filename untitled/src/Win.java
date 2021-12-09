@@ -1,9 +1,9 @@
 import com.fazecast.jSerialComm.SerialPort;
-
+import org.jfree.ui.RefineryUtilities;
+import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.nio.charset.StandardCharsets;
 
 
 public class Win extends JFrame implements ActionListener{
@@ -22,27 +22,35 @@ public class Win extends JFrame implements ActionListener{
     private JPanel mypanel;
     private JLabel label_deg_val;
     private JButton button_deg;
+    private JButton heatChartButton;
 
     private SerialPort[] ports;
     private byte[] r = new byte[5];  // porttan gelen/giden byte degerlerini tutmak icin olusuturlmustur
     private boolean execute = true;  // thread i baslatmak ve sonlandirmak icin olusturulmustur
+    public static ArrayList<Double> heatValues = new ArrayList<>();
+
     /**
      * arduinodan gelen sicaklik bilgisi icin olusturukmustur.
      * buton ile thread baslar
      * yine buton ile sonlanir.
      * her 1 saniyede arduinodan gelen veri label a yazdirilir
      * */
-    private Thread th = new Thread(() -> {
-        System.out.println("thread opened");
+    private Thread readHeat = new Thread(() -> {
+//        System.out.println("thread opened");
+        String h="";
+        Double d=0.0;
         while(execute) {
-            System.out.println("thread running!");
+            System.out.println("reading heat!");
 
             try{
                 ports[0].readBytes(r,5);
-                System.out.println(Main.convertBytesToString(r,5));
-                label_deg_val.setText(Main.convertBytesToString(r,5));
+                h = Main.convertBytesToString(r,5);
+                System.out.println(h);
+                label_deg_val.setText(h);
+                d = Double.parseDouble(h);
             }catch (Exception er){
                 System.out.println("cant read data.");
+                d=null;
             }
 
             try {
@@ -50,6 +58,8 @@ public class Win extends JFrame implements ActionListener{
             } catch (InterruptedException er) {
                 er.printStackTrace();
             }
+            heatValues.add(d);
+
         }
     });
 
@@ -65,6 +75,7 @@ public class Win extends JFrame implements ActionListener{
         setLocationRelativeTo(this);
         setSize(450,200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         add(mypanel);
         button1.addActionListener(this);
         button2.addActionListener(this);
@@ -73,6 +84,7 @@ public class Win extends JFrame implements ActionListener{
         button5.addActionListener(this);
         connectButton.addActionListener(this);
         button_deg.addActionListener(this);
+        heatChartButton.addActionListener(this);
         setVisible(true);
 
         System.out.println("\nUsing Library Version v" + SerialPort.getVersion());
@@ -82,8 +94,6 @@ public class Win extends JFrame implements ActionListener{
             System.out.println("   [" + i + "] " + ports[i].getSystemPortName() + ": " + ports[i].getDescriptivePortName() + " - " + ports[i].getPortDescription());
 
         }
-
-
 
     }
 
@@ -123,7 +133,7 @@ public class Win extends JFrame implements ActionListener{
                 if(button_deg.getText().equals("getDegree")){
                     this.execute = true;
                     try{
-                        this.th.start();
+                        this.readHeat.start();
                     }catch(Exception er){
                         System.out.println("error: "+er);
                     }
@@ -132,6 +142,11 @@ public class Win extends JFrame implements ActionListener{
                     this.execute = false;
                     button_deg.setText("getDegree");
                 }
+        }else if(e.getSource() == heatChartButton){
+            Chart c = new Chart("title", "chart title", heatValues);
+            c.pack();
+            RefineryUtilities.centerFrameOnScreen( c );
+            c.setVisible( true );
         }
 
     }
