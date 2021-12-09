@@ -25,7 +25,7 @@ public class Chart extends ApplicationFrame {
                 chartTitle ,
                 "Seconds" ,
                 "Degree" ,
-                createDataset(Y, "qwe") ,
+                createDataset(Y, "degree") ,
                 PlotOrientation.VERTICAL ,
                 true , true , false);
 

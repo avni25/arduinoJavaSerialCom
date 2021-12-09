@@ -35,21 +35,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException{
 
         Win win = new Win();
-//        Thread t1 = new Thread(()->{
-//            for (int i = 0; i < 5; i++) {
-//                System.out.println("t1: "+i);
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
 //
-//        t1.start();
-//        t1.join();
-//        System.out.println("end");
-
 
 
     }

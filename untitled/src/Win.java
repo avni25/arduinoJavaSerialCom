@@ -143,7 +143,7 @@ public class Win extends JFrame implements ActionListener{
                     button_deg.setText("getDegree");
                 }
         }else if(e.getSource() == heatChartButton){
-            Chart c = new Chart("title", "chart title", heatValues);
+            Chart c = new Chart("title", "Temperatures by time", heatValues);
             c.pack();
             RefineryUtilities.centerFrameOnScreen( c );
             c.setVisible( true );
